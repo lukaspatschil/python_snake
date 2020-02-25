@@ -5,9 +5,8 @@ pygame.init()
 
 pygame.init()
 
-screenWidth = 600
-screenHeight = 600
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+screenSize = 600
+screen = pygame.display.set_mode((screenSize, screenSize))
 
 pygame.display.set_caption('Snake in Pyhton by Lukas')
 
@@ -31,7 +30,7 @@ class cube(object):
         pass
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, dim)
+        pygame.draw.rect(screen, self.color, self.dim)
 
 
 class snake(object):
@@ -61,3 +60,47 @@ class food(object):
 
     def draw(self, screen):
         self.hitbox.draw(screen)
+
+
+def drawGrid():
+    for i in range(screenSize // 20):
+        pygame.draw.line(screen, (255, 255, 255),
+                         (i * 20, 0), (i * 20, screenSize))
+        pygame.draw.line(screen, (255, 255, 255),
+                         (0, i * 20), (screenSize, i * 20))
+
+
+def redrawGameWindow():
+    '''used to draw everything on the screen'''
+
+    screen.fill((0, 0, 0))
+
+    drawGrid()
+    player.draw(screen)
+
+    pygame.display.update()
+
+
+def end_game():
+    '''ends the game if the window is closed'''
+
+    global run
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+
+
+player = snake((0, 0))
+
+# mainloop
+while run:
+    clock.tick(27)
+
+    # makes it possible to end the game
+    end_game()
+
+    # redraw everything
+    redrawGameWindow()
+
+pygame.quit()
