@@ -76,6 +76,9 @@ class food(object):
     def draw(self, screen):
         self.hitbox.draw(screen)
 
+    def hit(self):
+        print('hit!')
+
 
 def drawGrid():
     for i in range(screenSize // 20):
@@ -91,7 +94,8 @@ def redrawGameWindow():
     screen.fill((0, 0, 0))
 
     drawGrid()
-    player.draw(screen)
+    for item in reversed(objects):
+        item.draw(screen)
 
     pygame.display.update()
 
@@ -106,9 +110,11 @@ def end_game():
             run = False
 
 
-player = snake((0, 0))
+objects = [snake((0, 0))]
+objects.append(food((100, 100)))
+
 direction = (1, 0)
-limiter = 0
+limiter = 1
 
 # mainloop
 while run:
@@ -125,7 +131,17 @@ while run:
 
     # automated moving
     if limiter == 0:
-        player.move(direction)
+        objects[0].move(direction)
+
+    # check if food gets eaten
+    for item in objects:
+        if item is not objects[0]:
+            if objects[0].snake[0].dim[1] < item.hitbox.dim[1] + item.hitbox.dim[3] and objects[0].snake[0].dim[1] + objects[0].snake[0].dim[3] > item.hitbox.dim[1]:
+                if objects[0].snake[0].dim[0] + objects[0].snake[0].dim[2] > item.hitbox.dim[0] and objects[0].snake[0].dim[0] < item.hitbox.dim[0] + item.hitbox.dim[2]:
+                    objects.remove(item)
+                    objects[0].add_cube()
+                    score += 1
+                    print(score)
 
         # w -> up; s -> down; a -> left; d -> right
     if keys[pygame.K_w]:
@@ -138,7 +154,7 @@ while run:
         direction = (-1, 0)
 
     if keys[pygame.K_SPACE]:
-        player.add_cube()
+        objects[0].add_cube()
 
     # increase counter to limit movespeed
     limiter += 1
