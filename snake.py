@@ -123,7 +123,7 @@ def lose_game():
     fontHit = pygame.font.SysFont('comicsans', 40)
     text = fontHit.render('You lost! Your score is: ' +
                           str(score), 1, (255, 218, 94))
-    screen.blit(text, (screenSize / 2 - (text.get_width() / 2), 200))
+    screen.blit(text, (screenSize // 2 - (text.get_width() // 2), 200))
     pygame.display.update()
 
     i = 0
