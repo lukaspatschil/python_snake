@@ -27,8 +27,8 @@ class cube(object):
         self.eyes = eyes
 
     def move(self):
-        self.dim = (self.dim[0] + 20 * self.dirn[0],
-                    self.dim[1] + 20 * self.dirn[1], 20, 20)
+        self.dim = (in_bounds(self.dim[0] + 20 * self.dirn[0]),
+                    in_bounds(self.dim[1] + 20 * self.dirn[1]), 20, 20)
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.dim)
@@ -130,6 +130,16 @@ def lose_game():
     while i < 300:
         pygame.time.delay(10)
         i += 1
+
+
+def in_bounds(x):
+    '''calculates if the next coordinate is on the screen or not'''
+    if x >= 600:
+        return 0
+    elif x < 0:
+        return 600
+    else:
+        return x
 
 
 objects = [snake((0, 0))]
