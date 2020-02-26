@@ -50,7 +50,7 @@ class snake(object):
     # TODO: fix it
     def addCube(self):
         self.snake.append(
-            cube((snake[-1].dim[0], snake[-1].dim[1]), color=self.color))
+            cube((self.snake[-1].dim[0], self.snake[-1].dim[1]), color=self.color))
 
     def draw(self, screen):
         for part in self.snake:
