@@ -48,10 +48,11 @@ class snake(object):
                 self.snake[i].dirn = copy(self.snake[i - 1].dirn)
             else:
                 self.snake[i].dirn = copy(dirn)
+
         for part in self.snake:
             part.move()
 
-    def addCube(self):
+    def add_cube(self):
         self.snake.append(cube((self.snake[-1].dim[0] - 20 * self.snake[-1].dirn[0], self.snake[-1].dim[1] -
                                 20 * self.snake[-1].dirn[1]), self.snake[-1].dirn[0], self.snake[-1].dirn[1], self.color))
 
@@ -100,6 +101,8 @@ def end_game():
 
 
 player = snake((0, 0))
+direction = (1, 0)
+limiter = 0
 
 # mainloop
 while run:
@@ -111,18 +114,28 @@ while run:
     # takes the players keyboard input
     keys = pygame.key.get_pressed()
 
+    if limiter > 5:
+        limiter = 0
+
+    # automated moving
+    if limiter == 0:
+        player.move(direction)
+
     # w -> up; s -> down; a -> left; d -> right
     if keys[pygame.K_w]:
-        player.move((0, -1))
+        direction = (0, -1)
     elif keys[pygame.K_d]:
-        player.move((1, 0))
+        direction = (1, 0)
     elif keys[pygame.K_s]:
-        player.move((0, 1))
+        direction = (0, 1)
     elif keys[pygame.K_a]:
-        player.move((-1, 0))
+        direction = (-1, 0)
 
     if keys[pygame.K_SPACE]:
-        player.addCube()
+        player.add_cube()
+
+    limiter += 1
+
     # redraw everything
     redrawGameWindow()
 
