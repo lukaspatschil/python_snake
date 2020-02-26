@@ -20,14 +20,14 @@ class cube(object):
     '''creates a new square used in the game'''
 
     def __init__(self, start, dirnx=1, dirny=0, color=(0, 0, 0), eyes=False):
-        self.dim = [start[0], start[1], 20, 20]
+        self.dim = (start[0], start[1], 20, 20)
         self.dirnx = dirnx
         self.dirny = dirny
         self.color = color
         self.eyes = eyes
 
     def move(self, dirnx, dirny):
-        pass
+        self.dim = (self.dim[0] + 20 * dirnx, self.dim[1] + 20 * dirny, 20, 20)
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.dim)
@@ -41,8 +41,9 @@ class snake(object):
         self.color = color
         self.snake = [cube(pos, color=self.color, eyes=True)]
 
-    def move(self):
-        pass
+    def move(self, dirnx, dirny):
+        for part in self.snake:
+            part.move(dirnx, dirny)
 
     def addCube(self):
         pass
@@ -99,6 +100,19 @@ while run:
 
     # makes it possible to end the game
     end_game()
+
+    # takes the players keyboard input
+    keys = pygame.key.get_pressed()
+
+    # w -> up; s -> down; a -> left; d -> right
+    if keys[pygame.K_w]:
+        player.move(0, -1)
+    elif keys[pygame.K_d]:
+        player.move(1, 0)
+    elif keys[pygame.K_s]:
+        player.move(0, 1)
+    elif keys[pygame.K_a]:
+        player.move(-1, 0)
 
     # redraw everything
     redrawGameWindow()
