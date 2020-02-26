@@ -9,7 +9,7 @@ pygame.init()
 screenSize = 600
 screen = pygame.display.set_mode((screenSize, screenSize))
 
-pygame.display.set_caption('Snake in Pyhton by Lukas')
+pygame.display.set_caption('Snake in Pyhton by lukas')
 
 clock = pygame.time.Clock()
 run = True
@@ -81,6 +81,7 @@ class food(object):
 
 
 def drawGrid():
+    '''draws a white grid of the board'''
     for i in range(screenSize // 20):
         pygame.draw.line(screen, (255, 255, 255),
                          (i * 20, 0), (i * 20, screenSize))
@@ -93,7 +94,9 @@ def redrawGameWindow():
 
     screen.fill((0, 0, 0))
 
-    drawGrid()
+    # if you want a white grid
+    # drawGrid()
+
     for item in reversed(objects):
         item.draw(screen)
 
@@ -110,67 +113,96 @@ def end_game():
             run = False
 
 
+def lose_game():
+    '''if the player loses this should be executed'''
+
+    global run
+
+    run = False
+
+    fontHit = pygame.font.SysFont('comicsans', 40)
+    text = fontHit.render('You lost! Your score is: ' +
+                          str(score), 1, (255, 218, 94))
+    screen.blit(text, (screenSize / 2 - (text.get_width() / 2), 200))
+    pygame.display.update()
+
+    i = 0
+    while i < 300:
+        pygame.time.delay(10)
+        i += 1
+
+
 objects = [snake((0, 0))]
-objects.append(food((100, 100)))
 
 direction = (1, 0)
 limiter = 1
 food_spawn = 1
 
 # mainloop
-while run:
-    clock.tick(27)
+if __name__ == "__main__":
+    while run:
+        clock.tick(27)
 
-    # makes it possible to end the game
-    end_game()
+        # makes it possible to end the game
+        end_game()
 
-    # takes the players keyboard input
-    keys = pygame.key.get_pressed()
+        # takes the players keyboard input
+        keys = pygame.key.get_pressed()
 
-    # set the intervall the snake movess
-    if limiter > 5:
-        limiter = 0
+        # set the intervall the snake movess
+        if limiter > 3:
+            limiter = 0
 
-    if food_spawn > 10000:
-        food_spawn = 0
+        # food spawn timer reset
+        if food_spawn > 1000:
+            food_spawn = 0
 
-    # automated moving
-    if limiter == 0:
-        objects[0].move(direction)
+        # automated moving
+        if limiter == 0:
+            objects[0].move(direction)
 
-    # spawning of food
-    if len(objects) == 1 or food_spawn == 0:
-        rand_spawn = (randint(0, 29) * 20, randint(0, 29) * 20)
-        objects.append(food(rand_spawn))
+        # spawning of food
+        if len(objects) == 1 or food_spawn == 0:
+            rand_spawn = (randint(0, (screenSize - 20) / 20) * 20,
+                          randint(0, (screenSize - 20) / 20) * 20)
+            objects.append(food(rand_spawn))
 
-    # check if food gets eaten
-    for item in objects:
-        if item is not objects[0]:
-            if objects[0].snake[0].dim[1] < item.hitbox.dim[1] + item.hitbox.dim[3] and objects[0].snake[0].dim[1] + objects[0].snake[0].dim[3] > item.hitbox.dim[1]:
-                if objects[0].snake[0].dim[0] + objects[0].snake[0].dim[2] > item.hitbox.dim[0] and objects[0].snake[0].dim[0] < item.hitbox.dim[0] + item.hitbox.dim[2]:
-                    objects.remove(item)
-                    objects[0].add_cube()
-                    score += 1
+        # check if food gets eaten
+        for item in objects:
+            if item is not objects[0]:
+                if objects[0].snake[0].dim[1] < item.hitbox.dim[1] + item.hitbox.dim[3] and objects[0].snake[0].dim[1] + objects[0].snake[0].dim[3] > item.hitbox.dim[1]:
+                    if objects[0].snake[0].dim[0] + objects[0].snake[0].dim[2] > item.hitbox.dim[0] and objects[0].snake[0].dim[0] < item.hitbox.dim[0] + item.hitbox.dim[2]:
+                        objects.remove(item)
+                        objects[0].add_cube()
+                        score += 1
+
+        for part in objects[0].snake:
+            if part is not objects[0].snake[0]:
+                if objects[0].snake[0].dim[1] < part.dim[1] + part.dim[3] and objects[0].snake[0].dim[1] + objects[0].snake[0].dim[3] > part.dim[1]:
+                    if objects[0].snake[0].dim[0] + objects[0].snake[0].dim[2] > part.dim[0] and objects[0].snake[0].dim[0] < part.dim[0] + part.dim[2]:
+                        lose_game()
 
         # w -> up; s -> down; a -> left; d -> right
-    if keys[pygame.K_w]:
-        direction = (0, -1)
-    elif keys[pygame.K_d]:
-        direction = (1, 0)
-    elif keys[pygame.K_s]:
-        direction = (0, 1)
-    elif keys[pygame.K_a]:
-        direction = (-1, 0)
+        if keys[pygame.K_w]:
+            direction = (0, -1)
+        elif keys[pygame.K_d]:
+            direction = (1, 0)
+        elif keys[pygame.K_s]:
+            direction = (0, 1)
+        elif keys[pygame.K_a]:
+            direction = (-1, 0)
 
-    if keys[pygame.K_SPACE]:
-        objects[0].add_cube()
+        # only for testing
+        # if keys[pygame.K_SPACE]:
+        #    objects[0].add_cube()
 
-    # increase counter to limit movespeed
-    limiter += 1
+        # increase counter to limit movespeed
+        limiter += 1
 
-    food_spawn += 1
+        # food spawn timer
+        food_spawn += 1
 
-    # redraw everything
-    redrawGameWindow()
+        # redraw everything
+        redrawGameWindow()
 
-pygame.quit()
+    pygame.quit()
