@@ -115,6 +115,7 @@ objects.append(food((100, 100)))
 
 direction = (1, 0)
 limiter = 1
+food_spawn = 1
 
 # mainloop
 while run:
@@ -126,12 +127,21 @@ while run:
     # takes the players keyboard input
     keys = pygame.key.get_pressed()
 
+    # set the intervall the snake movess
     if limiter > 5:
         limiter = 0
+
+    if food_spawn > 10000:
+        food_spawn = 0
 
     # automated moving
     if limiter == 0:
         objects[0].move(direction)
+
+    # spawning of food
+    if len(objects) == 1 or food_spawn == 0:
+        rand_spawn = (randint(0, 29) * 20, randint(0, 29) * 20)
+        objects.append(food(rand_spawn))
 
     # check if food gets eaten
     for item in objects:
@@ -141,7 +151,6 @@ while run:
                     objects.remove(item)
                     objects[0].add_cube()
                     score += 1
-                    print(score)
 
         # w -> up; s -> down; a -> left; d -> right
     if keys[pygame.K_w]:
@@ -158,6 +167,8 @@ while run:
 
     # increase counter to limit movespeed
     limiter += 1
+
+    food_spawn += 1
 
     # redraw everything
     redrawGameWindow()
