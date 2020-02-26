@@ -47,10 +47,9 @@ class snake(object):
             part.dirny = dirny
             part.move(dirnx, dirny)
 
-    # TODO: fix it
     def addCube(self):
-        self.snake.append(
-            cube((self.snake[-1].dim[0], self.snake[-1].dim[1]), color=self.color))
+        self.snake.append(cube((self.snake[-1].dim[0] - 20 * self.snake[-1].dirnx, self.snake[-1].dim[1] -
+                                20 * self.snake[-1].dirny), self.snake[-1].dirnx, self.snake[-1].dirny, self.color))
 
     def draw(self, screen):
         for part in self.snake:
