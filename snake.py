@@ -32,6 +32,7 @@ class cube(object):
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.dim)
+
         if self.eyes:
             pygame.draw.circle(screen, (0, 0, 0),
                                (self.dim[0] + 10 - abs(self.dirn[1]) * 5, self.dim[1] + 10 - abs(self.dirn[0]) * 5), 3)
