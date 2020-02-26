@@ -1,5 +1,6 @@
 import pygame
 from random import randint
+from copy import copy
 
 pygame.init()
 
@@ -21,13 +22,13 @@ class cube(object):
 
     def __init__(self, start, dirnx=1, dirny=0, color=(0, 0, 0), eyes=False):
         self.dim = (start[0], start[1], 20, 20)
-        self.dirnx = dirnx
-        self.dirny = dirny
+        self.dirn = (dirnx, dirny)
         self.color = color
         self.eyes = eyes
 
-    def move(self, dirnx, dirny):
-        self.dim = (self.dim[0] + 20 * dirnx, self.dim[1] + 20 * dirny, 20, 20)
+    def move(self):
+        self.dim = (self.dim[0] + 20 * self.dirn[0],
+                    self.dim[1] + 20 * self.dirn[1], 20, 20)
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.dim)
@@ -41,15 +42,18 @@ class snake(object):
         self.color = color
         self.snake = [cube(pos, color=self.color, eyes=True)]
 
-    def move(self, dirnx, dirny):
+    def move(self, dirn):
+        for i in range(len(self.snake) - 1, -1, -1):
+            if i != 0:
+                self.snake[i].dirn = copy(self.snake[i - 1].dirn)
+            else:
+                self.snake[i].dirn = copy(dirn)
         for part in self.snake:
-            part.dirnx = dirnx
-            part.dirny = dirny
-            part.move(dirnx, dirny)
+            part.move()
 
     def addCube(self):
-        self.snake.append(cube((self.snake[-1].dim[0] - 20 * self.snake[-1].dirnx, self.snake[-1].dim[1] -
-                                20 * self.snake[-1].dirny), self.snake[-1].dirnx, self.snake[-1].dirny, self.color))
+        self.snake.append(cube((self.snake[-1].dim[0] - 20 * self.snake[-1].dirn[0], self.snake[-1].dim[1] -
+                                20 * self.snake[-1].dirn[1]), self.snake[-1].dirn[0], self.snake[-1].dirn[1], self.color))
 
     def draw(self, screen):
         for part in self.snake:
@@ -109,13 +113,13 @@ while run:
 
     # w -> up; s -> down; a -> left; d -> right
     if keys[pygame.K_w]:
-        player.move(0, -1)
+        player.move((0, -1))
     elif keys[pygame.K_d]:
-        player.move(1, 0)
+        player.move((1, 0))
     elif keys[pygame.K_s]:
-        player.move(0, 1)
+        player.move((0, 1))
     elif keys[pygame.K_a]:
-        player.move(-1, 0)
+        player.move((-1, 0))
 
     if keys[pygame.K_SPACE]:
         player.addCube()
