@@ -134,6 +134,7 @@ while run:
     if keys[pygame.K_SPACE]:
         player.add_cube()
 
+    # increase counter to limit movespeed
     limiter += 1
 
     # redraw everything
