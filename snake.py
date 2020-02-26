@@ -32,6 +32,11 @@ class cube(object):
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.dim)
+        if self.eyes:
+            pygame.draw.circle(screen, (0, 0, 0),
+                               (self.dim[0] + 10 - abs(self.dirn[1]) * 5, self.dim[1] + 10 - abs(self.dirn[0]) * 5), 3)
+            pygame.draw.circle(screen, (0, 0, 0),
+                               (self.dim[0] + 10 + abs(self.dirn[1]) * 5, self.dim[1] + 10 + abs(self.dirn[0]) * 5), 3)
 
 
 class snake(object):
@@ -121,7 +126,7 @@ while run:
     if limiter == 0:
         player.move(direction)
 
-    # w -> up; s -> down; a -> left; d -> right
+        # w -> up; s -> down; a -> left; d -> right
     if keys[pygame.K_w]:
         direction = (0, -1)
     elif keys[pygame.K_d]:
