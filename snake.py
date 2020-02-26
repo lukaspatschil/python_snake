@@ -150,7 +150,7 @@ if __name__ == "__main__":
         keys = pygame.key.get_pressed()
 
         # set the intervall the snake movess
-        if limiter > 3:
+        if limiter > 5:
             limiter = 0
 
         # food spawn timer reset
@@ -183,14 +183,18 @@ if __name__ == "__main__":
                         lose_game()
 
         # w -> up; s -> down; a -> left; d -> right
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] and direction != (0, 1):
             direction = (0, -1)
-        elif keys[pygame.K_d]:
+            limiter = -1
+        elif keys[pygame.K_d] and direction != (-1, 0):
             direction = (1, 0)
-        elif keys[pygame.K_s]:
+            limiter = -1
+        elif keys[pygame.K_s] and direction != (0, -1):
             direction = (0, 1)
-        elif keys[pygame.K_a]:
+            limiter = -1
+        elif keys[pygame.K_a] and direction != (1, 0):
             direction = (-1, 0)
+            limiter = -1
 
         # only for testing
         # if keys[pygame.K_SPACE]:
