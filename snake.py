@@ -43,10 +43,14 @@ class snake(object):
 
     def move(self, dirnx, dirny):
         for part in self.snake:
+            part.dirnx = dirnx
+            part.dirny = dirny
             part.move(dirnx, dirny)
 
+    # TODO: fix it
     def addCube(self):
-        pass
+        self.snake.append(
+            cube((snake[-1].dim[0], snake[-1].dim[1]), color=self.color))
 
     def draw(self, screen):
         for part in self.snake:
@@ -114,6 +118,8 @@ while run:
     elif keys[pygame.K_a]:
         player.move(-1, 0)
 
+    if keys[pygame.K_SPACE]:
+        player.addCube()
     # redraw everything
     redrawGameWindow()
 
