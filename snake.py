@@ -15,7 +15,7 @@ run = True
 score = 0
 
 
-class cube(object):
+class Cube(object):
     '''creates a new square used in the game'''
 
     def __init__(self, start, dirnx=1, dirny=0, color=(0, 0, 0), eyes=False):
@@ -38,38 +38,38 @@ class cube(object):
                                (self.dim[0] + 10 + abs(self.dirn[1]) * 5, self.dim[1] + 10 + abs(self.dirn[0]) * 5), 3)
 
 
-class snake(object):
+class Snake(object):
     '''creates a new snake for the player'''
 
     def __init__(self, pos, color=(255, 0, 0)):
         self.pos = pos
         self.color = color
-        self.snake = [cube(pos, color=self.color, eyes=True)]
+        self.Snake = [Cube(pos, color=self.color, eyes=True)]
 
     def move(self, dirn):
-        for i in range(len(self.snake) - 1, -1, -1):
+        for i in range(len(self.Snake) - 1, -1, -1):
             if i != 0:
-                self.snake[i].dirn = copy(self.snake[i - 1].dirn)
+                self.snake[i].dirn = copy(self.Snake[i - 1].dirn)
             else:
                 self.snake[i].dirn = copy(dirn)
 
-        for part in self.snake:
+        for part in self.Snake:
             part.move()
 
     def add_cube(self):
-        self.snake.append(cube((self.snake[-1].dim[0] - 20 * self.snake[-1].dirn[0], self.snake[-1].dim[1] -
+        self.Snake.append(Cube((self.snake[-1].dim[0] - 20 * self.snake[-1].dirn[0], self.snake[-1].dim[1] -
                                 20 * self.snake[-1].dirn[1]), self.snake[-1].dirn[0], self.snake[-1].dirn[1], self.color))
 
     def draw(self, screen):
-        for part in self.snake:
+        for part in self.Snake:
             part.draw(screen)
 
 
-class food(object):
+class Food(object):
     ''' creates a new food item for the snake'''
 
     def __init__(self, pos):
-        self.hitbox = cube(pos, color=(0, 128, 0))
+        self.hitbox = Cube(pos, color=(0, 128, 0))
 
     def draw(self, screen):
         self.hitbox.draw(screen)
@@ -140,7 +140,7 @@ def in_bounds(x):
         return x
 
 
-objects = [snake((0, 0))]
+objects = [Snake((0, 0))]
 
 direction = (1, 0)
 limiter = 1
@@ -173,7 +173,7 @@ if __name__ == "__main__":
         if len(objects) == 1 or food_spawn == 0:
             rand_spawn = (randint(0, (screenSize - 20) / 20) * 20,
                           randint(0, (screenSize - 20) / 20) * 20)
-            objects.append(food(rand_spawn))
+            objects.append(Food(rand_spawn))
 
         # check if food gets eaten
         for item in objects:
@@ -184,7 +184,7 @@ if __name__ == "__main__":
                         objects[0].add_cube()
                         score += 1
 
-        for part in objects[0].snake:
+        for part in objects[0].Snake:
             if part is not objects[0].snake[0]:
                 if objects[0].snake[0].dim[1] < part.dim[1] + part.dim[3] and objects[0].snake[0].dim[1] + objects[0].snake[0].dim[3] > part.dim[1]:
                     if objects[0].snake[0].dim[0] + objects[0].snake[0].dim[2] > part.dim[0] and objects[0].snake[0].dim[0] < part.dim[0] + part.dim[2]:
