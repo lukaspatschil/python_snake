@@ -4,8 +4,6 @@ from copy import copy
 
 pygame.init()
 
-pygame.init()
-
 screenSize = 600
 screen = pygame.display.set_mode((screenSize, screenSize))
 
